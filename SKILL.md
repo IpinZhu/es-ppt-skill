@@ -86,6 +86,8 @@ Do not write plain paragraphs. You must leverage the pre-defined layout classes 
   `<div class="text-box-solid"> ... </div>`
 - **Dashed Border Box (for summaries, notes, or highlights)**:
   `<div class="text-box"> <span class="subtitle-accent">◆ Highlights:</span> Detailed text... </div>`
+- **Key Point Highlight (for emphasizing key terms/values inside any text box)**:
+  `<span class="highlight-key">关键术语/重要数值</span>` — Renders bold in dark red #C00000
 - **Multi-column Grids (for images & split layouts)**:
   `<div class="flex-row"> ... </div>` (Double columns)
   `<div class="grid-3"> <div class="img-placeholder">[Fig 1]</div> ... </div>` (Three columns)
