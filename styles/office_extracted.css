@@ -489,6 +489,12 @@ section.toc-slide .toc-item .text {
     font-size: 1.15em;
 }
 
+/* 暗红色关键术语/数值高亮 */
+.highlight-key {
+    color: #C00000;
+    font-weight: bold;
+}
+
 .img-placeholder {
     border: 1px dashed #999;
     border-radius: 2px;

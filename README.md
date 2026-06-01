@@ -11,7 +11,7 @@
 
 - **Phase 1: 打样预览 (Markdown -> HTML)**：AI 首回合会根据您的需求，生成 HTML-PPT 页面供您在浏览器中直观预览。
 - **Phase 2: 精准提炼注入 (JSON -> PPTX)**：一旦您确认 HTML 打样无误，AI 会自动对内容进行“总结与精简缩减”，将其转化为严格的结构化 JSON，并调用 Python 底层脚本 `build_from_template.py`。
-- **Phase 3:  PPTX 模板动态克隆**：脚本支持 `"normal"` (常规) 和 `"highlight"` (虚线强调框) 两种版式，根据 JSON 需求自动调用底层的 `win32com` 无损克隆相应的模板页面，并用 `python-pptx` 注入内容，生成最终的原生可编辑 PPTX。
+- **Phase 3: PPTX 模板动态克隆**：脚本支持 `"normal"` (常规) 和 `"highlight"` (虚线强调框) 两种版式。根据运行平台自动选择底层引擎：Windows + PowerPoint 使用 `win32com` 无损克隆模板页面，Linux / macOS / CI 使用 `python-pptx` 纯 OPC 操作实现等效克隆。两种引擎均通过 `python-pptx` 注入内容与公式，生成最终的原生可编辑 PPTX。
 
 ---
 
@@ -95,6 +95,7 @@ python scripts/build_pptx_linux.py    output/presentation_data.json templates/te
 ```
 
 ------
+
 
 ## 🤖 协作模型 (Collaborating Model)
 
