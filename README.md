@@ -100,3 +100,4 @@ python scripts/build_pptx_linux.py    output/presentation_data.json templates/te
 ## 🤖 协作模型 (Collaborating Model)
 
 本项目由 **Antigravity** (Google DeepMind) 参与协作开发，提供 AI 驱动的代码编写与样式设计支持。
+

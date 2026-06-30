@@ -22,8 +22,10 @@ When the user asks you to create a presentation, you MUST execute Phase 1:
    ```
 4. **Pause & Ask**: Inform the user that the HTML draft is ready for review. Ask them: "Please open `output/presentation.html` in your browser. If you are satisfied with the structure and content, tell me to proceed to Phase 2 to generate the native PPTX file."
 
-## Phase 1.5: Mandatory HTML Templates (Cover & TOC)
+## Phase 1.5: Mandatory HTML Templates (Cover, TOC & Content Layouts)
 You MUST use the exact HTML structures below for the Cover and TOC slides in Phase 1.
+
+For content slides, choose the layout class that best matches the information type.
 
 **Cover Slide Template**:
 ```html
@@ -76,21 +78,169 @@ You MUST use the exact HTML structures below for the Cover and TOC slides in Pha
 </div>
 ```
 
+### Content Slide Layout Templates
+
+**Gallery** (`layout: gallery`) — 要点列表 + 三图网格:
+```html
+---
+<div class="fill-height">
+  <div class="subtitle-black">➢ 小标题</div>
+  <div class="flex-row" style="flex: none !important;">
+    <div class="text-box-solid">
+      <span class="subtitle-accent">◆ 要点一</span>
+      - 列表项1
+      - 列表项2
+    </div>
+    <div class="text-box-solid">
+      <span class="subtitle-accent">◆ 要点二</span>
+      - 列表项1
+      - 列表项2
+    </div>
+  </div>
+  <div class="grid-3">
+    <div class="img-placeholder">[Fig 1]</div>
+    <div class="img-placeholder">[Fig 2]</div>
+    <div class="img-placeholder">[Fig 3]</div>
+  </div>
+</div>
+```
+
+**Highlight** (`layout: highlight`) — 高亮框 + 列表 + 三图:
+```html
+---
+<div class="fill-height">
+  <div class="subtitle-black">➢ 小标题</div>
+  <div class="text-box">
+    <span class="subtitle-accent">◆ 核心结论</span>
+    高亮强调的关键结论文字
+  </div>
+  <div class="flex-row" style="flex: none !important;">
+    <div class="text-box-solid">
+      - 补充说明1
+      - 补充说明2
+    </div>
+  </div>
+  <div class="grid-3">
+    <div class="img-placeholder">[Fig 1]</div>
+    <div class="img-placeholder">[Fig 2]</div>
+    <div class="img-placeholder">[Fig 3]</div>
+  </div>
+</div>
+```
+
+**Dual** (`layout: dual`) — 上下双块（可公式/对比/并列）+ 总结:
+```html
+---
+<div class="fill-height">
+  <div class="subtitle-black">➢ 小标题</div>
+  <div class="text-box-solid">
+    <span class="subtitle-accent">◆ 块一</span>
+    第一块内容，可包含公式 $E = mc^2$
+  </div>
+  <div class="text-box-solid">
+    <span class="subtitle-accent">◆ 块二</span>
+    第二块内容
+  </div>
+  <div class="text-box" style="flex: none !important;">
+    <span class="subtitle-accent">◆ 总结</span>
+    总结性语句
+  </div>
+</div>
+```
+
+**Columns** (`layout: columns`) — 多栏小标题+内容（2~3栏）+ 双图:
+```html
+---
+<div class="fill-height">
+  <div class="subtitle-black">➢ 总副标题（可选）</div>
+  <div class="flex-row">
+    <div class="text-box-solid">
+      <span class="subtitle-accent">◆ 栏目标题1</span>
+      栏目内容描述
+    </div>
+    <div class="text-box-solid">
+      <span class="subtitle-accent">◆ 栏目标题2</span>
+      栏目内容描述
+    </div>
+    <div class="text-box-solid">
+      <span class="subtitle-accent">◆ 栏目标题3</span>
+      栏目内容描述
+    </div>
+  </div>
+  <div class="flex-row" style="flex: none !important;">
+    <div class="img-placeholder">[Fig 1]</div>
+    <div class="img-placeholder">[Fig 2]</div>
+  </div>
+</div>
+```
+
+**Text-Image** (`layout: text-image`) — 左文右图:
+```html
+---
+<div class="fill-height">
+  <div class="subtitle-black">➢ 小标题</div>
+  <div class="flex-row">
+    <div class="text-box-solid" style="flex: 1;">
+      左侧大段描述性文字...
+    </div>
+    <div class="img-placeholder" style="flex: 1;">[Fig 1]</div>
+  </div>
+</div>
+```
+
+**Table** (`layout: table`) — 纯表格:
+```html
+---
+<div class="fill-height">
+  <div class="subtitle-black">➢ 小标题</div>
+  <div class="text-box-solid">
+    | 参数 | 方案A | 方案B |
+    |------|-------|-------|
+    | 功耗 | 50W   | 80W   |
+  </div>
+</div>
+```
+
+**Table-Image** (`layout: table-image`) — 表格 + 配图:
+```html
+---
+<div class="fill-height">
+  <div class="subtitle-black">➢ 小标题</div>
+  <div class="flex-row">
+    <div class="text-box-solid" style="flex: 1;">
+      | 时间 | 温度 | 压力 |
+      |------|------|------|
+      | T0   | 25   | 1.0  |
+    </div>
+    <div class="img-placeholder" style="flex: 1;">[Fig 1]</div>
+  </div>
+</div>
+```
+
 ## Phase 1.6: Applying Layout Components
-Do not write plain paragraphs. You must leverage the pre-defined layout classes in the stylesheet:
+Do not write plain paragraphs. You must leverage the pre-defined layout classes in the stylesheet, choosing the component set that matches your selected **layout**:
+
+**Universal components (all layouts)**:
 - **Full-height container (Mandatory outer wrapper for content slides)**:
   `<div class="fill-height"> ... </div>`
 - **Slide Subtitles**:
   `<div class="subtitle-black">➢ Subtitle Text</div>`
-- **Solid Background Box (for simple text/paragraphs)**:
+- **Solid Background Box**:
   `<div class="text-box-solid"> ... </div>`
 - **Dashed Border Box (for summaries, notes, or highlights)**:
   `<div class="text-box"> <span class="subtitle-accent">◆ Highlights:</span> Detailed text... </div>`
-- **Key Point Highlight (for emphasizing key terms/values inside any text box)**:
+- **Key Point Highlight**:
   `<span class="highlight-key">关键术语/重要数值</span>` — Renders bold in dark red #C00000
-- **Multi-column Grids (for images & split layouts)**:
+- **Multi-column Grids**:
   `<div class="flex-row"> ... </div>` (Double columns)
-  `<div class="grid-3"> <div class="img-placeholder">[Fig 1]</div> ... </div>` (Three columns)
+  `<div class="grid-3"> ... </div>` (Three columns)
+
+**Layout-specific guidance**:
+- **gallery / highlight**: Use `.grid-3` for image placeholders and `.text-box-solid` for bullet lists.
+- **dual**: Use two consecutive `.text-box-solid` blocks for the upper/lower content areas, and a final `.text-box` (with `flex: none !important;`) for the summary line.
+- **columns**: Use `.flex-row` with 2~3 `.text-box-solid` children. Each child starts with `<span class="subtitle-accent">◆ 标题</span>`. Place image placeholders in a second `.flex-row` below.
+- **text-image / table-image**: Use `.flex-row` with `style="flex: 1;"` on each child to balance the left/right split.
+- **table**: You may use a Markdown table inside `.text-box-solid`, or plain bullet lists if no tabular data exists.
 
 # Phase 2: Distill & Inject (Native PPTX Generation)
 
@@ -110,27 +260,83 @@ Only execute Phase 2 when the user explicitly approves the HTML or asks to gener
        "major": "Major",
        "date": "2026年5月"
      },
-     "toc": ["Chapter 1", "Chapter 2", "Chapter 3"],
+     "toc": ["Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4"],
      "slides": [
        {
-         "layout": "normal",
-         "title": "Chapter 1",
-         "subtitle": "➢ Key Point",
-         "bullets": ["Very short bullet 1", "Very short bullet 2"]
+         "layout": "gallery",
+         "title": "01 系统架构",
+         "subtitle": "➢ 核心模块",
+         "bullets": ["模块A负责采集", "模块B负责规划", "模块C负责输出"],
+         "images": ["assets/a.png", "assets/b.png", "assets/c.png"]
        },
        {
          "layout": "highlight",
-         "title": "Chapter 2",
-         "subtitle": "➢ Highlight Box",
-         "bullets": ["Highlighted detail 1"],
-         "highlight": "One-line emphasis text",
-         "image": "assets/some_image.png"
+         "title": "02 关键发现",
+         "subtitle": "➢ 实验结论",
+         "highlight": "效率提升至 92%",
+         "bullets": ["对比传统方案提升15%", "稳定性通过200h测试"],
+         "images": ["assets/chart1.png", "assets/chart2.png", "assets/chart3.png"]
+       },
+       {
+         "layout": "dual",
+         "title": "03 公式推导",
+         "subtitle": "➢ 两种能量模型",
+         "blocks": [
+           "动能公式 $E_k = \\frac{1}{2}mv^2$ 描述运动能量",
+           "势能公式 $E_p = mgh$ 描述位置能量"
+         ],
+         "summary": "两者共同构成系统总机械能"
+       },
+       {
+         "layout": "columns",
+         "title": "04 技术特点",
+         "columns": [
+           {"subtitle": "➢ 高效能", "content": "功耗降低40%，续航提升显著"},
+           {"subtitle": "➢ 高可靠", "content": "MTBF超10000小时"},
+           {"subtitle": "➢ 高兼容", "content": "支持多种通信协议"}
+         ],
+         "images": ["assets/diag1.png", "assets/diag2.png"]
+       },
+       {
+         "layout": "text-image",
+         "title": "05 实验环境",
+         "subtitle": "➢ 水下测试平台",
+         "text": "实验在HEU水池完成，深度10米，温度15-25℃，盐度3.5%。",
+         "image": "assets/pool.png"
+       },
+       {
+         "layout": "table",
+         "title": "06 性能参数",
+         "subtitle": "➢ 关键指标对比",
+         "table": {
+           "headers": ["参数", "方案A", "方案B"],
+           "rows": [
+             ["功耗(W)", "50", "80"],
+             ["效率(%)", "92", "85"],
+             ["成本(元)", "2000", "3500"]
+           ]
+         }
+       },
+       {
+         "layout": "table-image",
+         "title": "07 测试数据",
+         "subtitle": "➢ 实测结果",
+         "table": {
+           "headers": ["时间", "温度", "压力"],
+           "rows": [
+             ["T0", "25", "1.0"],
+             ["T1", "30", "1.2"]
+           ]
+         },
+         "image": "assets/chart.png"
        }
      ]
    }
    ```
 
-   **TOC capacity:** the bundled `templates/template.pptx` ships with **3 TOC entry placeholders** (texts `"01"` and `"项目背景介绍"`). Keep `toc` to 3 items; if more chapters are needed, group them or extend the template separately.
+   **Important:** In JSON, always escape backslashes in LaTeX: write `\\frac`, `\\sum`, etc. A single `\f` would be parsed as a form-feed control character and stripped.
+
+   **TOC capacity:** the bundled `templates/template.pptx` ships with **4 TOC entry placeholders**. You may use 1~4 items; if you need more, the engine will fill as many as exist in the template.
 
 2. **Pick the Right Template Engine for the Host OS**:
    Two interchangeable injection scripts are provided. They take the same arguments and produce the same PPTX shape — pick by environment.
@@ -159,21 +365,29 @@ Only execute Phase 2 when the user explicitly approves the HTML or asks to gener
 3. **Delivery**:
    Provide the generated PPTX file name to the user. The file is fully editable in PowerPoint / WPS / Keynote — no `win32com` traces are baked in even when the Linux engine produced it.
 
-## Phase 2 Bullet & Title Mapping (so the engines can find your text)
+## Phase 2 Layout & Field Mapping
 
 Both injection scripts pattern-match on the literal placeholder strings in `templates/template.pptx`. Do **not** rename these placeholders in the template, and do **not** alter your JSON keys; otherwise text will not be filled.
+
+| Layout | JSON fields | Template placeholders filled |
+|---|---|---|
+| `gallery` | `title`, `subtitle`, `bullets[]`, `images[]` | Title text, `➢ 小标题`, `列表1\n…`, `图片1/2/3` |
+| `highlight` | `title`, `subtitle`, `highlight`, `bullets[]`, `images[]` | Title text, `➢ 小标题`, `*高亮…`, `列表1\n…`, `图片/图片/图片` |
+| `dual` | `title`, `subtitle`, `blocks[]`, `summary` | Title text, `➢ 小标题`, `方法1`, `方法2`, `总结性语句` |
+| `columns` | `title`, `columns[{subtitle,content}]`, `images[]` | Title text, `➢ 小标题1/2/3`, `介绍1/1/1`, `图片1/2` |
+| `text-image` | `title`, `subtitle`, `text`, `image` | Title text, `➢ 小标题`, `描述性文字`, `图片1` |
+| `table` | `title`, `subtitle`, `table{headers,rows}` | Title text, `➢ 小标题`, existing table cells, `图片1` removed |
+| `table-image` | `title`, `subtitle`, `table{headers,rows}`, `image` | Title text, `➢ 小标题`, existing table cells, `图片1` |
+
+**Shared mappings (all layouts):**
 
 | JSON field | Template placeholder text | Notes |
 |---|---|---|
 | `cover.title` + `cover.subtitle` | `大大大大标题\x0b子标题` (two lines in a single text frame) | Linux engine inserts an `<a:br/>` between the two lines. |
-| `cover.reporter` / `instructor` / `major` | `申 请 人 ：…` block | Linux engine writes 4 lines: `汇 报 人 / 指导老师 / 专 业 / 日 期`. |
+| `cover.reporter` / `instructor` / `major` / `date` | `汇报人 ：\n导  师 ：\n专  业 ：` block | Engine writes 4 lines: `汇 报 人 / 指导老师 / 专 业 / 日 期`. |
 | `cover.date` | `2025年5月` text box | Replaced as a single line. |
-| `toc[i]` (number) | `01` (3 occurrences) | Replaced with `01`, `02`, `03`. |
-| `toc[i]` (title) | `项目背景介绍` (3 occurrences) | Replaced in document order. |
-| `slides[i].title` | `01 项目背景介绍` (text frame heading) | The chapter title at top-left of each content slide. |
-| `slides[i].subtitle` | `➢ 核心痛点分析` | The arrow-prefixed subtitle below the title. |
-| `slides[i].bullets` | `现有方案的局限性较高\n…` | One paragraph per bullet, joined by `\n`. |
-| `slides[i].highlight` | `*HIGHLIGHT…` (highlight layout only) | Single-line emphasis inside the dashed box. |
+| `toc[i]` (number) | `01`, `02`, `03`, `04` | Replaced with zero-padded chapter numbers. |
+| `toc[i]` (title) | TOC entry title shapes | Replaced in top-to-bottom document order. |
 
 
 
@@ -202,11 +416,22 @@ Follow these rules to ensure the slides compile flawlessly without rendering lea
    - When wrapping a formula inside a `<div class="text-box-solid">` or `<div class="text-box">`, keep the math on a single line using `$ ... $` (inline) or place a single `$$ ... $$` block on its own line inside the div with no surrounding blank lines.
    - Prefer LaTeX for any non-trivial physics expression. Do NOT pre-render formulas to ASCII (e.g. `tau_hydro`, `rho*g*V`). Always write `\tau_{hydro}`, `\rho g V_{sub}`, etc.
    - For matrices, use `\begin{bmatrix} ... \end{bmatrix}` inside `$$ ... $$`. Keep matrices small (≤3×3) on slides; reference larger structures in prose instead.
-9. **PPTX Formula Rendering (Phase 2 → OMML)**:
-   - Both `presentation_data.json` text fields (`bullets`, `highlight`, `subtitle`, `title`, `cover.title/subtitle`) keep math written as inline LaTeX `$...$`. Do NOT downgrade them to ASCII just because they go into a PPTX — the engines now handle math natively.
+9. **Layout Auto-Inference (AI decides which template to use)**:
+   When distilling content into JSON, analyze the text structure and pick the best `layout` automatically. Follow these heuristics:
+   - **Content mentions ≥3 images** → `gallery`
+   - **Content has "优势/劣势", "方案A/方案B", "对比", "两种", "并列"** → `dual`
+   - **Content has a "核心结论", "关键发现", "值得注意的是"** → `highlight`
+   - **Content has tabular data, "参数表", "指标对比"** → `table` (if no image) or `table-image` (if one image)
+   - **Content describes "特点", "特性", "维度" with 2~3 parallel items** → `columns`
+   - **Content has one core image + long descriptive text** → `text-image`
+   - **Content has one large chart/figure with minimal text** → `table-image` (treat chart as image) or `gallery` with fewer bullets
+   - **Fallback** → `gallery` (general-purpose bullet + image layout)
+10. **PPTX Formula Rendering (Phase 2 → OMML)**:
+   - All JSON text fields (`bullets`, `blocks[]`, `summary`, `highlight`, `subtitle`, `title`, `cover.title/subtitle`, `table.rows[]`) keep math written as inline LaTeX `$...$`. Do NOT downgrade them to ASCII just because they go into a PPTX — the engines now handle math natively.
    - `scripts/build_pptx_linux.py` scans each text segment, splits it into text / math chunks on `$ ... $`, converts every math chunk via `latex2mathml → mathml2omml` and inserts the result as a native `<a14:m><m:oMath>...</m:oMath></a14:m>` block inside the paragraph. Plain-text segments stay as `<a:r>` runs and inherit the original font (`rPr`).
    - After saving, the script post-processes each slide XML to hoist `xmlns:a14` and `xmlns:m` declarations from every `<a14:m>` element up to the root `<p:sld>`, so PowerPoint / WPS / Keynote treat the equations as first-class editable formulas instead of inline plain-text fallbacks.
    - Required dependencies on the host that runs Phase 2 (already declared in README): `pip install python-pptx lxml latex2mathml mathml2omml`. `latex2mathml` and `mathml2omml` are pure-Python and ship no native binaries.
+   - **JSON escaping:** In JSON string values, backslashes must be doubled: write `\\frac`, `\\sum`, `\\tau_{hydro}`. A raw `\f` sequence is interpreted as a form-feed control character and will be stripped, turning `\frac` into `rac`.
    - Display-style fractions (`\dfrac`), Greek letters, subscripts, superscripts, square roots, big operators (`\sum`), absolute values (`|\cdot|`), `\cdot`, `\circ`, `\arctan2`, `\arcsin`, `\propto` are all supported and round-trip correctly.
-   - Only single-line `$...$` (inline-style) is supported in the JSON. `$$...$$` block math is NOT parsed by the JSON ingestion path — break long display equations into one or two `$...$` segments per bullet, or place them in a `highlight` field.
+   - Only single-line `$...$` (inline-style) is supported in the JSON. `$$...$$` block math is NOT parsed by the JSON ingestion path — break long display equations into one or two `$...$` segments per bullet, or place them in a `highlight` or `blocks[]` field.
    - `scripts/build_from_template.py` (Windows + PowerPoint engine) does NOT yet do the LaTeX→OMML conversion — it relies on PowerPoint's manual equation editor at runtime. If you need cross-platform parity, prefer the Linux engine on Windows too (it works there as well).
