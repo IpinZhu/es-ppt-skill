@@ -35,8 +35,8 @@ WIN32_LAYOUT_MAP = {
     "dual":         5,   # Slide 4
     "columns":      6,   # Slide 5
     "text-image":   7,   # Slide 6
-    "table":        9,   # Slide 8
-    "table-image":  9,   # Slide 8
+    "table":        8,   # Slide 7 (table-image template, image removed)
+    "table-image":  8,   # Slide 7
 }
 
 
@@ -53,8 +53,9 @@ def prepare_slides_win32(pptx_path, slides_data):
             # Move the new slide to just before the thanks slide
             new_slide.MoveTo(presentation.Slides.Count - 1)
 
-        # Delete original content template slides (indices 3~9, 1-based) from high to low
-        for idx in range(9, 2, -1):
+        # Delete original content template slides (indices 3~8, 1-based) from high to low.
+        # Clones have been moved to the end, so indices 3~8 are the originals.
+        for idx in range(8, 2, -1):
             presentation.Slides(idx).Delete()
 
         presentation.Save()

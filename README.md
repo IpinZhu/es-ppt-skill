@@ -1,6 +1,5 @@
 # HEU哈工程风自动化 AI PPT 生成 SKILL
 
-
 本项目专为打造**哈尔滨工程大学 (HEU)** 专属风格而生，通过结合大语言模型的能力与底层原生 PPTX 模板引擎，为 AI Agent 赋予自动设计、排版与渲染**哈工程风**幻灯片的技能。
 
 最新版采用了**“双阶段解耦（Two-Phase Hybrid）”**工作流：利用了 Markdown/HTML 强大的总结排版打样能力，又结合了 Native PPTX 模板的可编辑性。
@@ -38,9 +37,9 @@
 
 ##  :tada: 效果预览
 
-![image-20260526210205294](./imgs/image-20260526210205294.png)
+![image-20260526210205294](./imgs/README/image-20260526210205294.png)
 
-![image-20260526210307611](./imgs/image-20260526210307611.png)
+![image-20260526210307611](./imgs/README/image-20260526210307611.png)
 
 ---
 
@@ -95,9 +94,4 @@ python scripts/build_pptx_linux.py    output/presentation_data.json templates/te
 ```
 
 ------
-
-
-## 🤖 协作模型 (Collaborating Model)
-
-本项目由 **Antigravity** (Google DeepMind) 参与协作开发，提供 AI 驱动的代码编写与样式设计支持。
 

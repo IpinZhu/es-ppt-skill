@@ -32,8 +32,8 @@ section {
     box-sizing: border-box;
     overflow: hidden;
     
-    background-image: 
-        url('assets/heu_logo_color.png'),
+    background-image:
+        url('../assets/heu_logo_color.png'),
         linear-gradient(to right, var(--color-accent-main) 0%, var(--color-accent-main) 100%);
     background-position: 
         top 20px right 30px,
@@ -343,10 +343,10 @@ section.thanks-slide footer {
 }
 
 section.toc-slide {
-    background-image: 
-        url('assets/heu_logo_color.png'), 
-        linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), 
-        url('assets/bg1.png'),
+    background-image:
+        url('../assets/heu_logo_color.png'),
+        linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
+        url('../assets/bg1.png'),
         linear-gradient(to right, var(--color-accent-main) 0%, var(--color-accent-main) 100%);
     background-position: 
         top 20px right 30px, 

@@ -14,7 +14,7 @@ When the user asks you to create a presentation, you MUST execute Phase 1:
 2. **Markdown Generation**: Write a `presentation.md` file in the `output/` directory using the Marp syntax.
    - You MUST include frontmatter (`marp: true`, `theme: ../styles/office_extracted.css`, etc.).
    - **You MUST add `math: katex` to the frontmatter** so that LaTeX formulas (`$...$` inline, `$$...$$` block) render as proper math via Marp's built-in KaTeX engine. Whenever the source contains physics, math, or engineering equations, write them as LaTeX rather than plain text — never degrade `\tau_{hydro}`, `\rho`, subscripts, fractions, or matrices into ASCII.
-   - Follow the detailed **Mandatory Templates & Layout Specifications** below.
+   - Follow the detailed **Mandatory Templates & Layout Specifications** below. These HTML blocks are embedded **directly inside the `.md` file**.
 3. **Compile HTML**:
    Run the following command to generate the HTML preview:
    ```bash
@@ -34,7 +34,7 @@ For content slides, choose the layout class that best matches the information ty
 <img class="cover-logo" src="../assets/heu_logo_badge.png" />
 <div class="cover-title-area">
   <div class="cover-title-p1">主标题</div>
-  <div class="cover-title-p1">副标题</div>
+  <div class="cover-title-p2">副标题</div>
 </div>
 <div class="cover-meta-line"></div>
 <div class="cover-meta-list">
@@ -61,6 +61,8 @@ For content slides, choose the layout class that best matches the information ty
 </div>
 ```
 
+> **TOC page constraint:** The TOC should fit on a single slide. Keep the entry count to 4–6 items and the titles concise. If you have more chapters, group them under broader headings rather than splitting the TOC across multiple slides.
+
 **Thanks Slide Template**:
 ```html
 ---
@@ -83,18 +85,23 @@ For content slides, choose the layout class that best matches the information ty
 **Gallery** (`layout: gallery`) — 要点列表 + 三图网格:
 ```html
 ---
+<h1>Slide Title</h1>
 <div class="fill-height">
   <div class="subtitle-black">➢ 小标题</div>
   <div class="flex-row" style="flex: none !important;">
     <div class="text-box-solid">
       <span class="subtitle-accent">◆ 要点一</span>
-      - 列表项1
-      - 列表项2
+      <ul>
+        <li>列表项1</li>
+        <li>列表项2</li>
+      </ul>
     </div>
     <div class="text-box-solid">
       <span class="subtitle-accent">◆ 要点二</span>
-      - 列表项1
-      - 列表项2
+      <ul>
+        <li>列表项1</li>
+        <li>列表项2</li>
+      </ul>
     </div>
   </div>
   <div class="grid-3">
@@ -108,6 +115,7 @@ For content slides, choose the layout class that best matches the information ty
 **Highlight** (`layout: highlight`) — 高亮框 + 列表 + 三图:
 ```html
 ---
+<h1>Slide Title</h1>
 <div class="fill-height">
   <div class="subtitle-black">➢ 小标题</div>
   <div class="text-box">
@@ -116,8 +124,10 @@ For content slides, choose the layout class that best matches the information ty
   </div>
   <div class="flex-row" style="flex: none !important;">
     <div class="text-box-solid">
-      - 补充说明1
-      - 补充说明2
+      <ul>
+        <li>补充说明1</li>
+        <li>补充说明2</li>
+      </ul>
     </div>
   </div>
   <div class="grid-3">
@@ -131,6 +141,7 @@ For content slides, choose the layout class that best matches the information ty
 **Dual** (`layout: dual`) — 上下双块（可公式/对比/并列）+ 总结:
 ```html
 ---
+<h1>Slide Title</h1>
 <div class="fill-height">
   <div class="subtitle-black">➢ 小标题</div>
   <div class="text-box-solid">
@@ -151,6 +162,7 @@ For content slides, choose the layout class that best matches the information ty
 **Columns** (`layout: columns`) — 多栏小标题+内容（2~3栏）+ 双图:
 ```html
 ---
+<h1>Slide Title</h1>
 <div class="fill-height">
   <div class="subtitle-black">➢ 总副标题（可选）</div>
   <div class="flex-row">
@@ -177,6 +189,7 @@ For content slides, choose the layout class that best matches the information ty
 **Text-Image** (`layout: text-image`) — 左文右图:
 ```html
 ---
+<h1>Slide Title</h1>
 <div class="fill-height">
   <div class="subtitle-black">➢ 小标题</div>
   <div class="flex-row">
@@ -191,12 +204,14 @@ For content slides, choose the layout class that best matches the information ty
 **Table** (`layout: table`) — 纯表格:
 ```html
 ---
+<h1>Slide Title</h1>
 <div class="fill-height">
   <div class="subtitle-black">➢ 小标题</div>
   <div class="text-box-solid">
-    | 参数 | 方案A | 方案B |
-    |------|-------|-------|
-    | 功耗 | 50W   | 80W   |
+    <table>
+      <thead><tr><th>参数</th><th>方案A</th><th>方案B</th></tr></thead>
+      <tbody><tr><td>功耗</td><td>50W</td><td>80W</td></tr></tbody>
+    </table>
   </div>
 </div>
 ```
@@ -204,18 +219,22 @@ For content slides, choose the layout class that best matches the information ty
 **Table-Image** (`layout: table-image`) — 表格 + 配图:
 ```html
 ---
+<h1>Slide Title</h1>
 <div class="fill-height">
   <div class="subtitle-black">➢ 小标题</div>
   <div class="flex-row">
     <div class="text-box-solid" style="flex: 1;">
-      | 时间 | 温度 | 压力 |
-      |------|------|------|
-      | T0   | 25   | 1.0  |
+      <table>
+        <thead><tr><th>时间</th><th>温度</th><th>压力</th></tr></thead>
+        <tbody><tr><td>T0</td><td>25</td><td>1.0</td></tr></tbody>
+      </table>
     </div>
     <div class="img-placeholder" style="flex: 1;">[Fig 1]</div>
   </div>
 </div>
 ```
+
+> **Note on HTML-block content:** Marp’s Markdown parser (markdown-it) does not parse Markdown syntax inside block-level HTML tags such as `<div>`. Therefore, whenever you place lists or tables inside `.text-box-solid` or `.text-box`, you must write them as raw HTML (`<ul><li>...`, `<table>...`) rather than Markdown (`- item`, `| col |`). Inline math (`$...$`) is the sole exception: it is rendered client-side by KaTeX after the HTML is generated, so `$...$` **does** work inside HTML blocks.
 
 ## Phase 1.6: Applying Layout Components
 Do not write plain paragraphs. You must leverage the pre-defined layout classes in the stylesheet, choosing the component set that matches your selected **layout**:
@@ -234,13 +253,15 @@ Do not write plain paragraphs. You must leverage the pre-defined layout classes 
 - **Multi-column Grids**:
   `<div class="flex-row"> ... </div>` (Double columns)
   `<div class="grid-3"> ... </div>` (Three columns)
+- **Image Placeholder**:
+  `<div class="img-placeholder">[Fig caption]</div>` — Reserved box for an illustration. You may leave it as a text placeholder; inserting real images is optional and should be done only when assets are readily available.
 
 **Layout-specific guidance**:
 - **gallery / highlight**: Use `.grid-3` for image placeholders and `.text-box-solid` for bullet lists.
 - **dual**: Use two consecutive `.text-box-solid` blocks for the upper/lower content areas, and a final `.text-box` (with `flex: none !important;`) for the summary line.
 - **columns**: Use `.flex-row` with 2~3 `.text-box-solid` children. Each child starts with `<span class="subtitle-accent">◆ 标题</span>`. Place image placeholders in a second `.flex-row` below.
 - **text-image / table-image**: Use `.flex-row` with `style="flex: 1;"` on each child to balance the left/right split.
-- **table**: You may use a Markdown table inside `.text-box-solid`, or plain bullet lists if no tabular data exists.
+- **table**: Use an HTML `<table>` inside `.text-box-solid`, or an HTML `<ul>` list if no tabular data exists.
 
 # Phase 2: Distill & Inject (Native PPTX Generation)
 
@@ -248,7 +269,7 @@ Only execute Phase 2 when the user explicitly approves the HTML or asks to gener
 
 1. **Distill Content into JSON**:
    Native PPTX templates have strict, fixed-size text boxes. You must shrink and summarize the content from the Markdown.
-   Generate a `presentation_data.json` file in the `output/` directory. Each slide can specify a `layout`: `"normal"` (standard text layout) or `"highlight"` (includes a dashed highlight box).
+   Generate a `presentation_data.json` file in the `output/` directory. Each slide must specify a `layout` chosen from the supported types: `gallery`, `highlight`, `dual`, `columns`, `text-image`, `table`, or `table-image`.
 
    ```json
    {
@@ -336,6 +357,8 @@ Only execute Phase 2 when the user explicitly approves the HTML or asks to gener
 
    **Important:** In JSON, always escape backslashes in LaTeX: write `\\frac`, `\\sum`, etc. A single `\f` would be parsed as a form-feed control character and stripped.
 
+   **Images as captions:** The `images` / `image` fields may be either real file paths (e.g. `"assets/figure.png"`) or descriptive captions (e.g. `"Fig 4.1 双轴机械臂示意图"`). When a path does not exist on disk, the injection engine writes the string into the placeholder box as a figure caption, so it is clear which picture should be inserted later.
+
    **TOC capacity:** the bundled `templates/template.pptx` ships with **4 TOC entry placeholders**. You may use 1~4 items; if you need more, the engine will fill as many as exist in the template.
 
 2. **Pick the Right Template Engine for the Host OS**:
@@ -374,7 +397,7 @@ Both injection scripts pattern-match on the literal placeholder strings in `temp
 | `gallery` | `title`, `subtitle`, `bullets[]`, `images[]` | Title text, `➢ 小标题`, `列表1\n…`, `图片1/2/3` |
 | `highlight` | `title`, `subtitle`, `highlight`, `bullets[]`, `images[]` | Title text, `➢ 小标题`, `*高亮…`, `列表1\n…`, `图片/图片/图片` |
 | `dual` | `title`, `subtitle`, `blocks[]`, `summary` | Title text, `➢ 小标题`, `方法1`, `方法2`, `总结性语句` |
-| `columns` | `title`, `columns[{subtitle,content}]`, `images[]` | Title text, `➢ 小标题1/2/3`, `介绍1/1/1`, `图片1/2` |
+| `columns` | `title`, `columns[{subtitle,content}]`, `images[]` | Title text, `➢ 小标题1/2/3`, `介绍1/2/3`, `图片1/2` |
 | `text-image` | `title`, `subtitle`, `text`, `image` | Title text, `➢ 小标题`, `描述性文字`, `图片1` |
 | `table` | `title`, `subtitle`, `table{headers,rows}` | Title text, `➢ 小标题`, existing table cells, `图片1` removed |
 | `table-image` | `title`, `subtitle`, `table{headers,rows}`, `image` | Title text, `➢ 小标题`, existing table cells, `图片1` |
@@ -384,8 +407,8 @@ Both injection scripts pattern-match on the literal placeholder strings in `temp
 | JSON field | Template placeholder text | Notes |
 |---|---|---|
 | `cover.title` + `cover.subtitle` | `大大大大标题\x0b子标题` (two lines in a single text frame) | Linux engine inserts an `<a:br/>` between the two lines. |
-| `cover.reporter` / `instructor` / `major` / `date` | `汇报人 ：\n导  师 ：\n专  业 ：` block | Engine writes 4 lines: `汇 报 人 / 指导老师 / 专 业 / 日 期`. |
-| `cover.date` | `2025年5月` text box | Replaced as a single line. |
+| `cover.reporter` / `instructor` / `major` / `date` | `汇报人 ：\n导  师 ：\n专  业 ：\n日  期 ：` block | Engine writes all 4 fields into this multi-line text frame. |
+| `cover.date` | `2025年5月` text box | **Also** replaced separately in the standalone date text box below the meta block. |
 | `toc[i]` (number) | `01`, `02`, `03`, `04` | Replaced with zero-padded chapter numbers. |
 | `toc[i]` (title) | TOC entry title shapes | Replaced in top-to-bottom document order. |
 
@@ -399,8 +422,9 @@ Follow these rules to ensure the slides compile flawlessly without rendering lea
 
 1. **No Blank Lines inside HTML Block Nodes (Prevent Tag Leaks)**:
    - Marp’s CommonMark parser treats empty lines inside HTML blocks as paragraph breaks. This splits the HTML block and outputs raw HTML tags directly onto the screen. **Always keep HTML structures contiguous with zero blank lines.**
-2. **Never Use `h1` in Custom Special Slides (Avoid Global Style Pollution)**:
-   - The global `h1` class is absolute-positioned at `top: 30px; left: 70px;` for normal content pages. If you use `h1` inside custom containers (like `.cover-title-area`), the title text will fly out of position. **Always use `div` elements with custom class names (e.g. `.cover-title-p1`) for titles on custom pages.**
+2. **Use `h1` on Normal Content Slides, Never in Custom Special Slides**:
+   - On normal content slides, place `<h1>Slide Title</h1>` right after the slide separator `---`. The global `h1` style renders the slide title at the top-left and keeps the top-right logo visible.
+   - Do **not** use `h1` inside custom special slides (Cover, TOC, Thanks). The global `h1` class is absolute-positioned at `top: 30px; left: 70px`; if used inside custom containers (like `.cover-title-area`), the title text will fly out of position. **Always use `div` elements with custom class names (e.g. `.cover-title-p1`) for titles on custom pages.**
 3. **Prevent Stretch on Concluding Text Boxes**:
    - The default `flex-grow: 1` rule targets the last child of `.fill-height`. If the last child is a concluding statement box wrapped in `.flex-row` instead of an image grid, it will stretch into a huge, empty background block.
    - **Solution**: Explicitly set `flex: none !important;` inline on the `.flex-row` container to keep it compact and proportional to the text length.
@@ -409,7 +433,7 @@ Follow these rules to ensure the slides compile flawlessly without rendering lea
    - **Best Practice**: Set a fixed width on `.label` (e.g. `width: 86px;`) using `display: inline-block; text-align-last: justify;`. Put the colon outside the span: `<span class="label">汇报人</span>：`. Enable `display: flex; align-items: flex-start;` on the parent `.cover-meta-item` so wrapped long values automatically align under the colon, preserving clean vertical columns.
 5. **Phase isolation**: Do NOT generate JSON or run the PPTX script during Phase 1. Wait for the user's explicit command.
 6. **JSON Length Limits**: Ensure bullet points are concise (max 3 lines) to prevent text overflow in the fixed-size native template.
-7. **Asset Relative Paths**: Always ensure `assets/` paths resolve correctly depending on your working directory (e.g., if outputting to `output/`, point image paths to `../assets/`).
+7. **Asset Relative Paths**: Always ensure `assets/` paths resolve correctly depending on your working directory (e.g., if outputting to `output/`, point image paths to `../assets/`). Also verify that background-image URLs inside the theme CSS resolve from the generated HTML location; otherwise logos and decorative images will not appear.
 8. **LaTeX / Math Rendering**:
    - The Marp frontmatter MUST contain `math: katex` whenever the deck has any equation. Without it, `$...$` and `$$...$$` are output as raw text and subscripts/Greek letters become unreadable.
    - Inline math uses single `$ ... $`; display math uses `$$ ... $$` on its own lines (a blank line before and after the block is fine — those blank lines are between Markdown blocks, NOT inside HTML containers, so rule #1 still holds).

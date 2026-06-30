@@ -107,11 +107,20 @@ def clone_slide(prs, source_index):
         i += 1
     new_element = copy.deepcopy(src_part._element)
     new_part = SlidePart(candidate, src_part.content_type, pkg, new_element)
+    # Preserve source rIds so embedded pictures/hyperlinks keep working.
+    rid_map = {}
     for rel in src_part.rels.values():
         if rel.is_external:
-            new_part.rels.get_or_add_ext_rel(rel.reltype, rel.target_ref)
+            new_rid = new_part.rels.get_or_add_ext_rel(rel.reltype, rel.target_ref)
         else:
-            new_part.rels.get_or_add(rel.reltype, rel.target_part)
+            new_rid = new_part.rels.get_or_add(rel.reltype, rel.target_part)
+        rid_map[rel.rId] = new_rid
+    # Remap r:embed / r:link attributes in the cloned slide XML.
+    for el in new_part._element.iter():
+        for attr in (qn("r:embed"), qn("r:link")):
+            old_rid = el.get(attr)
+            if old_rid and old_rid in rid_map:
+                el.set(attr, rid_map[old_rid])
     rId = prs.part.relate_to(new_part, PRES_SLIDE_RELTYPE)
     sldIdLst = prs.slides._sldIdLst
     existing_ids = [int(e.get("id")) for e in sldIdLst.findall(qn("p:sldId"))]
@@ -156,6 +165,21 @@ def iter_shapes(shapes):
             yield from iter_shapes(shape.shapes)
         else:
             yield shape
+
+
+def _is_footer_or_decorative(shape):
+    """Return True for footer/school-motto and page-number placeholders."""
+    if not shape.has_text_frame:
+        return False
+    t = shape.text_frame.text.strip()
+    if "大工至善" in t or "大学至真" in t:
+        return True
+    if shape.shape_type == 14:  # PLACEHOLDER (page number)
+        return True
+    # Decorative header/footer bars are wide, short AUTO_SHAPEs at top/bottom.
+    if shape.shape_type == 1 and shape.height < 500000 and shape.width > 7000000:
+        return True
+    return False
 
 
 def _capture_first_run_rPr(text_frame):
@@ -310,19 +334,25 @@ def _collect_image_placeholders(slide):
 
 
 def replace_images_in_slide(slide, images):
-    """Replace image placeholders in slide with actual images.
-    images: list of file paths. Placeholders matched left-to-right.
+    """Replace image placeholders in slide with actual images or captions.
+    images: list of file paths or descriptive captions. Placeholders matched left-to-right.
+    If a path exists as a file, the placeholder is replaced with the picture.
+    Otherwise the placeholder text is set to the provided string (e.g. "Fig 4.1 ...").
     """
     if not images:
         return
     placeholders = _collect_image_placeholders(slide)
     for ph, img_path in zip(placeholders, images):
-        if not img_path or not os.path.exists(img_path):
+        if not img_path:
             continue
-        left, top, width, height = ph.left, ph.top, ph.width, ph.height
-        sp = ph._element
-        sp.getparent().remove(sp)
-        slide.shapes.add_picture(img_path, left, top, width, height)
+        if os.path.exists(img_path):
+            left, top, width, height = ph.left, ph.top, ph.width, ph.height
+            sp = ph._element
+            sp.getparent().remove(sp)
+            slide.shapes.add_picture(img_path, left, top, width, height)
+        else:
+            # Use the provided string as a figure caption inside the placeholder.
+            set_text_keep_format(ph, img_path)
 
 
 def remove_image_placeholders(slide):
@@ -510,20 +540,34 @@ def fill_dual(slide, s_data):
     handled = _fill_title_and_subtitle(slide, s_data)
     blocks = s_data.get("blocks", [])
     summary = s_data.get("summary", "")
-    # Collect candidate text shapes (exclude already-handled title/subtitle)
+    # Collect candidate text shapes (exclude title/subtitle and footer/decorative).
+    # In the dual template the real content boxes are TEXT_BOX shapes; decorative
+    # header bars are AUTO_SHAPE and must be ignored.
     candidates = []
     for shape in iter_shapes(slide.shapes):
         if shape._element in handled or not shape.has_text_frame:
             continue
+        if _is_footer_or_decorative(shape):
+            continue
+        if shape.shape_type != 17:  # MSO_SHAPE_TYPE.TEXT_BOX
+            continue
         txt = shape.text_frame.text.strip()
         candidates.append((shape.top, shape, txt))
     candidates.sort(key=lambda x: x[0])
-    # Fill blocks into first N candidates, summary into last
+    # Identify summary box: prefer the candidate whose original text mentions 总结.
+    summary_idx = None
+    for idx, (_, _, txt) in enumerate(candidates):
+        if "总结" in txt:
+            summary_idx = idx
+            break
+    if summary_idx is None and candidates:
+        summary_idx = len(candidates) - 1
+    # Fill blocks into first N candidates, summary into its box, others empty.
     for idx, (_, shape, txt) in enumerate(candidates):
         if idx < len(blocks):
             lines = blocks[idx].split("\n")
             set_multiline_text(shape, lines, min_lines=1)
-        elif idx == len(candidates) - 1 and summary:
+        elif summary_idx is not None and idx == summary_idx and summary:
             set_text_keep_format(shape, summary)
         else:
             set_text_keep_format(shape, "")
@@ -612,8 +656,8 @@ LAYOUT_MAP = {
     "dual": 4,
     "columns": 5,
     "text-image": 6,
-    "table": 8,
-    "table-image": 8,
+    "table": 7,
+    "table-image": 7,
 }
 
 
@@ -648,7 +692,8 @@ def fill_toc(slide, toc):
         # Skip decorative / non-entry texts
         if t in ("目 录", "CONTENTS", "大工至善 大学至真"):
             continue
-        if t.isdigit() and len(t) <= 2:
+        # Skip single-digit page numbers like "2", "3" but keep two-digit TOC numbers "01", "02".
+        if t.isdigit() and len(t) == 1:
             continue
         # Match two-digit entry numbers like "01", "02"
         if re.match(r"^\d{2}$", t):
@@ -715,8 +760,9 @@ def process(json_path, template_path, output_path):
         last = len(prs.slides) - 1
         move_slide(prs, last, last - 1)
 
-    # Remove all original content template slides (indices 2-8) from high to low
-    for idx in sorted([8, 7, 6, 5, 4, 3, 2], reverse=True):
+    # Remove all original content template slides (indices 2-7) from high to low.
+    # Clones have been moved to positions >= 8, so indices 2-7 are the originals.
+    for idx in sorted([7, 6, 5, 4, 3, 2], reverse=True):
         if idx < len(prs.slides):
             remove_slide(prs, idx)
 
